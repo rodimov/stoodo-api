@@ -1,1 +1,8 @@
-
+spring.datasource.url=jdbc:postgresql://localhost:5445/postgres
+spring.datasource.username=postgres
+spring.datasource.password=postgres
+spring.flyway.url=jdbc:postgresql://localhost:5445/postgres
+spring.flyway.user=postgres
+spring.flyway.password=postgres
+spring.flyway.schemas=public
+springdoc.swagger-ui.csrf.enabled=true
