@@ -5,7 +5,7 @@ import org.springframework.data.domain.Page;
 import java.util.Optional;
 
 public interface UserService {
-    User create(User user);
-    Optional<UserDTO> getOne(int userId);
-    Page<UserDTO> getList(int page, int size);
+    UserInfoDTO create(UserCreationDTO userCreationDTO);
+    Optional<UserInfoDTO> getOne(int userId);
+    Page<UserInfoDTO> getList(int page, int size);
 }

@@ -9,8 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserDTO {
-    private Integer id;
+public class UserCreationDTO {
     private String firstName;
     private String lastName;
 }

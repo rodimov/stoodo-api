@@ -19,22 +19,21 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<User> create(@RequestBody User user) {
-        user.setId(null);
+    public ResponseEntity<UserInfoDTO> create(@RequestBody UserCreationDTO user) {
         return new ResponseEntity<>(this.userService.create(user), HttpStatus.CREATED);
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<UserDTO> getOne(@PathVariable("id") int userId) {
-        Optional<UserDTO> user = this.userService.getOne(userId);
+    public ResponseEntity<UserInfoDTO> getOne(@PathVariable("id") int userId) {
+        Optional<UserInfoDTO> user = this.userService.getOne(userId);
 
-        return user.map(userDTO -> new ResponseEntity<>(userDTO, HttpStatus.OK))
+        return user.map(userInfoDTO -> new ResponseEntity<>(userInfoDTO, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
 
     }
 
     @GetMapping("/list")
-    public ResponseEntity<Page<UserDTO>> getList(@RequestParam int page, @RequestParam int size) {
+    public ResponseEntity<Page<UserInfoDTO>> getList(@RequestParam int page, @RequestParam int size) {
         return new ResponseEntity<>(this.userService.getList(page, size), HttpStatus.OK);
     }
 }

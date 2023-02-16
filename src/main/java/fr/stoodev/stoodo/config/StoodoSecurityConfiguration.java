@@ -1,4 +1,4 @@
-package fr.stoodev.stoodo.security;
+package fr.stoodev.stoodo.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

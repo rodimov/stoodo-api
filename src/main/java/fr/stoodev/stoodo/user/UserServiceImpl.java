@@ -23,21 +23,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User create(User user) {
-        return this.userRepository.save(user);
+    public UserInfoDTO create(UserCreationDTO userCreationDTO) {
+        User user = this.modelMapper.map(userCreationDTO, User.class);
+        user = this.userRepository.save(user);
+        return this.modelMapper.map(user, UserInfoDTO.class);
     }
 
     @Override
-    public Optional<UserDTO> getOne(int userId) {
+    public Optional<UserInfoDTO> getOne(int userId) {
         Optional<User> user = this.userRepository.findById(userId);
-        return user.map(value -> this.modelMapper.map(value, UserDTO.class));
+        return user.map(value -> this.modelMapper.map(value, UserInfoDTO.class));
     }
 
     @Override
-    public Page<UserDTO> getList(int page, int size) {
+    public Page<UserInfoDTO> getList(int page, int size) {
         PageRequest pr = PageRequest.of(page,size);
         Page<User> usersPage = this.userRepository.findAll(pr);
 
-        return usersPage.map(user -> this.modelMapper.map(user, UserDTO.class));
+        return usersPage.map(user -> this.modelMapper.map(user, UserInfoDTO.class));
     }
 }

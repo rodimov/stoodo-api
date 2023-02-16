@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 public class Post {
 
     @Id
-    private Integer id;
+    private Long id;
     private String title;
     private String slug;
     private String description;
