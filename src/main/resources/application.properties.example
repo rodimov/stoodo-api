@@ -1,3 +1,5 @@
+stoodo.security.secret=YOUR_SECRETE_HERE
+stoodo.security.token-expiration-time=1440000
 server.servlet.context-path=/api/v1
 spring.datasource.url=jdbc:postgresql://localhost:5445/postgres
 spring.datasource.username=postgres
@@ -6,4 +8,3 @@ spring.flyway.url=jdbc:postgresql://localhost:5445/postgres
 spring.flyway.user=postgres
 spring.flyway.password=postgres
 spring.flyway.schemas=public
-springdoc.swagger-ui.csrf.enabled=true

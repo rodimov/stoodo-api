@@ -1,4 +1,4 @@
-package fr.stoodev.stoodo.user;
+package fr.stoodev.stoodo.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,12 +6,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class UserCreationDTO {
-    private String firstName;
-    private String lastName;
-    private String email;
+public class AuthenticationRequest {
+    private String username;
     private String password;
 }

@@ -14,4 +14,5 @@ public class UserInfoDTO extends AuditableDTO {
     private Integer id;
     private String firstName;
     private String lastName;
+    private String email;
 }

@@ -1,5 +1,8 @@
 package fr.stoodev.stoodo.user;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -10,6 +13,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/user")
+@Tag(name = "User", description = "The User API. Contains all the operations that can be performed on a user.")
 public class UserController {
     private final UserService userService;
 
@@ -19,11 +23,14 @@ public class UserController {
     }
 
     @PostMapping("/create")
+    @Operation(summary = "Create user", description = "Create user")
+    @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<UserInfoDTO> create(@RequestBody UserCreationDTO user) {
         return new ResponseEntity<>(this.userService.create(user), HttpStatus.CREATED);
     }
 
     @GetMapping("/get/{id}")
+    @Operation(summary = "Get user", description = "Return user by id")
     public ResponseEntity<UserInfoDTO> getOne(@PathVariable("id") int userId) {
         Optional<UserInfoDTO> user = this.userService.getOne(userId);
 
@@ -33,6 +40,7 @@ public class UserController {
     }
 
     @GetMapping("/list")
+    @Operation(summary = "Get users list", description = "Return users list")
     public ResponseEntity<Page<UserInfoDTO>> getList(@RequestParam int page, @RequestParam int size) {
         return new ResponseEntity<>(this.userService.getList(page, size), HttpStatus.OK);
     }
