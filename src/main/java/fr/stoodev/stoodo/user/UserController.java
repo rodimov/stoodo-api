@@ -41,6 +41,7 @@ public class UserController {
 
     @GetMapping("/list")
     @Operation(summary = "Get users list", description = "Return users list")
+    @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<Page<UserInfoDTO>> getList(@RequestParam int page, @RequestParam int size) {
         return new ResponseEntity<>(this.userService.getList(page, size), HttpStatus.OK);
     }

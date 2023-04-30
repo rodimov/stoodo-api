@@ -28,7 +28,7 @@ public class SecurityConfiguration {
                 .requestMatchers("/swagger-ui/**").permitAll()
                 .requestMatchers("/v3/api-docs/**").permitAll()
                 .requestMatchers("/user/get/**").permitAll()
-                .requestMatchers("/user/list").permitAll()
+                .requestMatchers("/user/list").hasAuthority(UserRole.ADMIN.name())
                 .requestMatchers("/user/create").hasAuthority(UserRole.ADMIN.name())
                 .anyRequest().authenticated()
                 .and()
