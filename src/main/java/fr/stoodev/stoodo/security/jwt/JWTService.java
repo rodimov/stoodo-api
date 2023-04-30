@@ -27,8 +27,11 @@ public class JWTService {
     @Value("${stoodo.security.secret}")
     private String secret;
 
-    @Value("${stoodo.security.token-expiration-time}")
-    private long tokenExpirationTime;
+    @Value("${stoodo.security.access-token-expiration-time}")
+    private long accessTokenExpirationTime;
+
+    @Value("${stoodo.security.refresh-token-expiration-time}")
+    private long refreshTokenExpirationTime;
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -53,12 +56,17 @@ public class JWTService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String generateToken(UserDetails user) {
-        return generateToken(new HashMap<>(), user);
+    public String generateAccessToken(UserDetails user) {
+        return generateToken(new HashMap<>(), accessTokenExpirationTime, user);
+    }
+
+    public String generateRefreshToken(UserDetails user) {
+        return generateToken(new HashMap<>(), refreshTokenExpirationTime, user);
     }
 
     public String generateToken(
             Map<String, Object> extraClaims,
+            long tokenExpirationTime,
             UserDetails user
     ) {
         return Jwts

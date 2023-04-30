@@ -6,6 +6,6 @@ import java.util.Optional;
 
 public interface UserService {
     UserInfoDTO create(UserCreationDTO userCreationDTO);
-    Optional<UserInfoDTO> getOne(int userId);
+    Optional<UserInfoDTO> getOne(long userId);
     Page<UserInfoDTO> getList(int page, int size);
 }

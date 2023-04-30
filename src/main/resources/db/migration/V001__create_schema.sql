@@ -2,8 +2,8 @@ CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
     first_name VARCHAR(256),
     last_name VARCHAR(256),
-    username VARCHAR(256),
-    email VARCHAR(256),
+    username VARCHAR(256) UNIQUE,
+    email VARCHAR(256) UNIQUE,
     password VARCHAR(256),
     role VARCHAR(256),
     is_expired BOOLEAN,
@@ -22,4 +22,13 @@ CREATE TABLE IF NOT EXISTS posts (
     slug VARCHAR(256),
     description VARCHAR(256),
     owner_id BIGINT REFERENCES users
+);
+
+CREATE TABLE IF NOT EXISTS refresh_tokens (
+    id SERIAL PRIMARY KEY,
+    token VARCHAR(256),
+    token_type VARCHAR(256),
+    is_revoked BOOLEAN,
+    is_expired BOOLEAN,
+    user_id BIGINT REFERENCES users
 );

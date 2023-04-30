@@ -1,5 +1,6 @@
 stoodo.security.secret=YOUR_SECRETE_HERE
-stoodo.security.token-expiration-time=1440000
+stoodo.security.access-token-expiration-time=1440000
+stoodo.security.refresh-token-expiration-time=2629800000
 server.servlet.context-path=/api/v1
 spring.datasource.url=jdbc:postgresql://localhost:5445/postgres
 spring.datasource.username=postgres

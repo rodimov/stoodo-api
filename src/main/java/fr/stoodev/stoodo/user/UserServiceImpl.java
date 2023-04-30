@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<UserInfoDTO> getOne(int userId) {
+    public Optional<UserInfoDTO> getOne(long userId) {
         Optional<User> user = this.userRepository.findById(userId);
         return user.map(value -> this.modelMapper.map(value, UserInfoDTO.class));
     }
