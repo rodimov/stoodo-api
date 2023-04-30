@@ -74,10 +74,12 @@ public class AuthenticationService {
                 .orElseThrow();
 
         var accessToken = jwtService.generateAccessToken(user);
-        var refreshToken = jwtService.generateRefreshToken(user);
 
-        saveUserToken(user, refreshToken);
-        saveRefreshTokenInCookies(response, refreshToken);
+        if (request.isSaveSession()) {
+            var refreshToken = jwtService.generateRefreshToken(user);
+            saveUserToken(user, refreshToken);
+            saveRefreshTokenInCookies(response, refreshToken);
+        }
 
         var authResponse = AuthenticationResponse.builder()
                 .accessToken(accessToken)
