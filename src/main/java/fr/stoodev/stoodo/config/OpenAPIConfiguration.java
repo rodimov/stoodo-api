@@ -21,9 +21,15 @@ import org.springframework.context.annotation.Configuration;
                 termsOfService = "https://www.stoodo.fr/tos",
                 description = "API for stoodo app"
         ),
-        servers = @Server(
-                url = "http://localhost:8080/api/v1/",
-                description = "Demo"
-        )
+        servers = {
+                @Server(
+                        url = "http://188.166.114.84/api/v1",
+                        description = "Demo"
+                ),
+                @Server(
+                        url = "http://localhost:8080/api/v1",
+                        description = "Develop"
+                ),
+        }
 )
 public class OpenAPIConfiguration {}

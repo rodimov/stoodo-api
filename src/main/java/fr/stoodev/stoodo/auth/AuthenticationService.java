@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -34,6 +35,9 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     private static final String REFRESH_TOKEN_COOKIE = "refresh_token";
+
+    @Value("${stoodo.security.secured-cookies}")
+    private static boolean isSecuredCookies;
 
 
     public void register(RegisterRequest request,
@@ -240,7 +244,7 @@ public class AuthenticationService {
         Cookie cookie = new Cookie(REFRESH_TOKEN_COOKIE, refreshToken);
         cookie.setPath("/");
         cookie.setMaxAge(2592000);
-        cookie.setSecure(true);
+        cookie.setSecure(isSecuredCookies);
         cookie.setHttpOnly(true);
         response.addCookie(cookie);
     }
@@ -249,13 +253,19 @@ public class AuthenticationService {
         Cookie cookie = new Cookie(REFRESH_TOKEN_COOKIE, null);
         cookie.setPath("/");
         cookie.setMaxAge(0);
-        cookie.setSecure(true);
+        cookie.setSecure(isSecuredCookies);
         cookie.setHttpOnly(true);
         response.addCookie(cookie);
     }
 
     private Optional<String> getRefreshTokenInCookies(HttpServletRequest request) {
-        return Arrays.stream(request.getCookies())
+        var cookies = request.getCookies();
+
+        if (cookies == null) {
+            return Optional.empty();
+        }
+
+        return Arrays.stream(cookies)
                 .filter(cookie -> cookie.getName().equals(REFRESH_TOKEN_COOKIE))
                 .map(Cookie::getValue)
                 .findAny();
