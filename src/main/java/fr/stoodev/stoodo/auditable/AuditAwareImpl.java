@@ -12,7 +12,18 @@ public class AuditAwareImpl implements AuditorAware<Long> {
 
     @Override
     public Optional<Long> getCurrentAuditor() {
-        // User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return Optional.of(1L);
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if (auth == null) {
+            return Optional.empty();
+        }
+
+        var principal = auth.getPrincipal();
+
+        if (principal instanceof User user) {
+            return Optional.of(user.getId());
+        }
+
+        return Optional.empty();
     }
 }
