@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS users (
 
 CREATE TABLE IF NOT EXISTS posts (
     id SERIAL PRIMARY KEY,
-    title VARCHAR(256),
+    title VARCHAR(256) UNIQUE NOT NULL,
     slug VARCHAR(256) UNIQUE NOT NULL,
     image_url VARCHAR(1024),
     description VARCHAR(1024),
@@ -47,9 +47,9 @@ CREATE TABLE IF NOT EXISTS tags (
     tag VARCHAR(256) UNIQUE NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS tags_posts (
+CREATE TABLE IF NOT EXISTS posts_tags (
     id SERIAL PRIMARY KEY,
-    tag_id BIGINT REFERENCES tags,
+    tags_id BIGINT REFERENCES tags,
     post_id BIGINT REFERENCES posts
 );
 
@@ -58,9 +58,9 @@ CREATE TABLE IF NOT EXISTS topics (
     topic VARCHAR(256) UNIQUE NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS topics_posts (
+CREATE TABLE IF NOT EXISTS posts_topics (
     id SERIAL PRIMARY KEY,
-    topic_id BIGINT REFERENCES topics,
+    topics_id BIGINT REFERENCES topics,
     post_id BIGINT REFERENCES posts
 );
 

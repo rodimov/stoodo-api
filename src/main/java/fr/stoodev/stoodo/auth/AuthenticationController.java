@@ -1,5 +1,6 @@
 package fr.stoodev.stoodo.auth;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/auth")
+@Tag(name = "Authentication", description = "The Authentication API")
 @RequiredArgsConstructor
 public class AuthenticationController {
 
