@@ -10,5 +10,7 @@ public interface PostService {
     PostDTO create(PostCreationDTO postCreationDTO);
     Optional<PostDTO> getOneById(long postId);
     Optional<PostDTO> getOneBySlug(String slug);
-    Page<PostDTO> getList(int page, int size);
+    Page<PostDTO> getListPublished(int page, int size);
+    Page<PostDTO> getListNotPublished(int page, int size);
+    Page<PostDTO> getListAll(int page, int size);
 }

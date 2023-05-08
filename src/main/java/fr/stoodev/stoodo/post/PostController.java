@@ -56,10 +56,24 @@ public class PostController {
 
     }
 
-    @GetMapping("/list")
-    @Operation(summary = "Get posts list", description = "Return posts list")
-    public ResponseEntity<Page<PostDTO>> getList(@RequestParam int page, @RequestParam int size) {
-        return new ResponseEntity<>(this.postService.getList(page, size), HttpStatus.OK);
+    @GetMapping("/list_published")
+    @Operation(summary = "Get published posts list", description = "Return published posts list")
+    public ResponseEntity<Page<PostDTO>> getListPublished(@RequestParam int page, @RequestParam int size) {
+        return new ResponseEntity<>(this.postService.getListPublished(page, size), HttpStatus.OK);
+    }
+
+    @GetMapping("/list_not_published")
+    @Operation(summary = "Get not published posts list", description = "Return not published posts list")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<Page<PostDTO>> getListNotPublished(@RequestParam int page, @RequestParam int size) {
+        return new ResponseEntity<>(this.postService.getListNotPublished(page, size), HttpStatus.OK);
+    }
+
+    @GetMapping("/list_all")
+    @Operation(summary = "Get all posts list", description = "Return all posts list")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<Page<PostDTO>> getListAll(@RequestParam int page, @RequestParam int size) {
+        return new ResponseEntity<>(this.postService.getListAll(page, size), HttpStatus.OK);
     }
 
     @GetMapping("/topics_list")

@@ -4,6 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,7 +47,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Page<UserInfoDTO> getList(int page, int size) {
-        PageRequest pr = PageRequest.of(page,size);
+        PageRequest pr = PageRequest.of(page, size, Sort.by("id"));
         Page<User> usersPage = this.userRepository.findAll(pr);
 
         return usersPage.map(user -> this.modelMapper.map(user, UserInfoDTO.class));

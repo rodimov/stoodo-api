@@ -32,7 +32,9 @@ public class SecurityConfiguration {
                 .requestMatchers("/user/create").hasAuthority(UserRole.ADMIN.name())
                 .requestMatchers("/post/get_by_id/**").permitAll()
                 .requestMatchers("/post/get_by_slug/**").permitAll()
-                .requestMatchers("/post/list").permitAll()
+                .requestMatchers("/post/list_published").permitAll()
+                .requestMatchers("/post/list_not_published").hasAnyAuthority(UserRole.ADMIN.name())
+                .requestMatchers("/post/list_all").hasAnyAuthority(UserRole.ADMIN.name())
                 .requestMatchers("/post/create").hasAnyAuthority(UserRole.ADMIN.name(),
                         UserRole.CONTRIBUTOR.name(), UserRole.SUPPORT.name())
                 .requestMatchers("/post/create_topic").hasAuthority(UserRole.ADMIN.name())

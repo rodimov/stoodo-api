@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -64,8 +65,22 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Page<PostDTO> getList(int page, int size) {
-        PageRequest pr = PageRequest.of(page, size);
+    public Page<PostDTO> getListPublished(int page, int size) {
+        PageRequest pr = PageRequest.of(page, size, Sort.by("id"));
+        Page<Post> postsPage = this.postRepository.findByIsPublished(true, pr);
+        return postsPage.map(post -> this.modelMapper.map(post, PostDTO.class));
+    }
+
+    @Override
+    public Page<PostDTO> getListNotPublished(int page, int size) {
+        PageRequest pr = PageRequest.of(page, size, Sort.by("id"));
+        Page<Post> postsPage = this.postRepository.findByIsPublished(false, pr);
+        return postsPage.map(post -> this.modelMapper.map(post, PostDTO.class));
+    }
+
+    @Override
+    public Page<PostDTO> getListAll(int page, int size) {
+        PageRequest pr = PageRequest.of(page, size, Sort.by("id"));
         Page<Post> postsPage = this.postRepository.findAll(pr);
         return postsPage.map(post -> this.modelMapper.map(post, PostDTO.class));
     }
