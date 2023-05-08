@@ -42,6 +42,7 @@ public class SecurityConfiguration {
                         UserRole.CONTRIBUTOR.name(), UserRole.SUPPORT.name())
                 .requestMatchers("/post/topics_list").permitAll()
                 .requestMatchers("/post/get_content_by_post_id/**").permitAll()
+                .requestMatchers("/post/post_stat/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement()

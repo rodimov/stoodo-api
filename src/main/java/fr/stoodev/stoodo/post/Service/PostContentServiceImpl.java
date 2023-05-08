@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -84,7 +83,7 @@ public class PostContentServiceImpl implements PostContentService {
 
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        if (!user.getAuthorities().stream().allMatch(a -> a.getAuthority().equals(UserRole.ADMIN.name()))
+        if (user.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals(UserRole.ADMIN.name()))
                 || !Objects.equals(user.getId(), post.get().getOwner().getId())) {
             return Page.empty();
         }

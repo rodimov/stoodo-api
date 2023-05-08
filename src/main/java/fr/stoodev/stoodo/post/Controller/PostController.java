@@ -1,10 +1,10 @@
 package fr.stoodev.stoodo.post.Controller;
 
 import fr.stoodev.stoodo.post.DTO.*;
-import fr.stoodev.stoodo.post.Entity.PostContent;
 import fr.stoodev.stoodo.post.Entity.Topic;
 import fr.stoodev.stoodo.post.Service.PostContentService;
 import fr.stoodev.stoodo.post.Service.PostService;
+import fr.stoodev.stoodo.post.Service.PostUserHistoryService;
 import fr.stoodev.stoodo.post.Service.TopicService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -25,6 +25,7 @@ import java.util.UUID;
 public class PostController {
     private final PostService postService;
     private final PostContentService postContentService;
+    private final PostUserHistoryService postUserHistoryService;
     private final TopicService topicService;
 
     @PostMapping("/create")
@@ -114,5 +115,66 @@ public class PostController {
                                                                            @RequestParam int page,
                                                                            @RequestParam int size) {
         return new ResponseEntity<>(this.postContentService.getListByPostId(postId, page, size), HttpStatus.OK);
+    }
+
+    @GetMapping("/post_stat/{id}")
+    @Operation(summary = "Get post likes, opened and views count",
+            description = "Return post likes, opened and views count by post id")
+    public ResponseEntity<PostStatisticsDTO> getPostLikeCount(@PathVariable("id") UUID postId) {
+        Optional<Long> postLikesCount = postUserHistoryService.countPostLikes(postId);
+        Optional<Long> postOpenedCount = postUserHistoryService.countPostOpened(postId);
+        Optional<Long> postViewsCount = postUserHistoryService.countPostViews(postId);
+
+        if (postLikesCount.isEmpty() || postOpenedCount.isEmpty() || postViewsCount.isEmpty()) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(
+                PostStatisticsDTO.builder()
+                        .likesCount(postLikesCount.get())
+                        .openedCount(postOpenedCount.get())
+                        .viewsCount(postViewsCount.get())
+                        .build(),
+                HttpStatus.OK);
+    }
+
+    @PostMapping("/like_post/{id}")
+    @Operation(summary = "Like post", description = "Like post by post id")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<PostUserHistoryDTO> setLikedPost(@PathVariable("id") UUID postId,
+                                                           @RequestParam boolean isLiked) {
+        Optional<PostUserHistoryDTO> postUserHistoryDTO = postUserHistoryService.setLiked(postId, isLiked);
+
+        return postUserHistoryDTO.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
+                .orElse(new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
+    }
+
+    @PostMapping("/open_post/{id}")
+    @Operation(summary = "Open post", description = "Open post by post id")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<PostUserHistoryDTO> setOpenedPost(@PathVariable("id") UUID postId) {
+        Optional<PostUserHistoryDTO> postUserHistoryDTO = postUserHistoryService.setOpened(postId);
+
+        return postUserHistoryDTO.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
+                .orElse(new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
+    }
+
+    @PostMapping("/view_post/{id}")
+    @Operation(summary = "View post", description = "View post by post id")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<PostUserHistoryDTO> setViewPost(@PathVariable("id") UUID postId) {
+        Optional<PostUserHistoryDTO> postUserHistoryDTO = postUserHistoryService.setViewed(postId);
+
+        return postUserHistoryDTO.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
+                .orElse(new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
+    }
+
+    @GetMapping("/user_history/{id}")
+    @Operation(summary = "Get user history", description = "Return user history by user id")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<Page<PostUserHistoryDTO>> getUserHistory(@PathVariable("id") UUID userId,
+                                                                   @RequestParam int page,
+                                                                   @RequestParam int size) {
+        return new ResponseEntity<>(postUserHistoryService.getUserHistory(userId, page, size), HttpStatus.OK);
     }
 }
