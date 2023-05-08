@@ -1,6 +1,9 @@
-package fr.stoodev.stoodo.post;
+package fr.stoodev.stoodo.post.Service;
 
 import fr.stoodev.stoodo.post.DTO.TagCreationDTO;
+import fr.stoodev.stoodo.post.Entity.Tag;
+import fr.stoodev.stoodo.post.Repository.TagRepository;
+import fr.stoodev.stoodo.post.Service.TagService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;

@@ -1,7 +1,7 @@
 package fr.stoodev.stoodo.post.DTO;
 
-import fr.stoodev.stoodo.post.Tag;
-import fr.stoodev.stoodo.post.Topic;
+import fr.stoodev.stoodo.post.Entity.Tag;
+import fr.stoodev.stoodo.post.Entity.Topic;
 import fr.stoodev.stoodo.user.UserInfoDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,6 +1,9 @@
-package fr.stoodev.stoodo.post;
+package fr.stoodev.stoodo.post.Service;
 
 import fr.stoodev.stoodo.post.DTO.TopicCreationDTO;
+import fr.stoodev.stoodo.post.Entity.Topic;
+import fr.stoodev.stoodo.post.Repository.TopicRepository;
+import fr.stoodev.stoodo.post.Service.TopicService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;

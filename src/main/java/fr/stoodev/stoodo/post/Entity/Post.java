@@ -1,4 +1,4 @@
-package fr.stoodev.stoodo.post;
+package fr.stoodev.stoodo.post.Entity;
 
 import fr.stoodev.stoodo.auditable.Auditable;
 import fr.stoodev.stoodo.user.User;
@@ -15,7 +15,6 @@ import java.util.List;
 @Entity
 @Table(name = "posts")
 public class Post extends Auditable {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

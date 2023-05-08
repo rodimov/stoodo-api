@@ -1,6 +1,7 @@
-package fr.stoodev.stoodo.post;
+package fr.stoodev.stoodo.post.Service;
 
 import fr.stoodev.stoodo.post.DTO.TagCreationDTO;
+import fr.stoodev.stoodo.post.Entity.Tag;
 import org.springframework.data.domain.Page;
 
 import java.util.Optional;

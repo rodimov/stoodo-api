@@ -1,4 +1,4 @@
-package fr.stoodev.stoodo.post;
+package fr.stoodev.stoodo.post.Entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

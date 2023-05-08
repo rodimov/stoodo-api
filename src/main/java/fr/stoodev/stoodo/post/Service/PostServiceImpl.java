@@ -1,8 +1,10 @@
-package fr.stoodev.stoodo.post;
+package fr.stoodev.stoodo.post.Service;
 
 import fr.stoodev.stoodo.post.DTO.PostCreationDTO;
 import fr.stoodev.stoodo.post.DTO.PostDTO;
 import fr.stoodev.stoodo.post.DTO.TagCreationDTO;
+import fr.stoodev.stoodo.post.Entity.Post;
+import fr.stoodev.stoodo.post.Repository.PostRepository;
 import fr.stoodev.stoodo.user.User;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;

@@ -35,8 +35,6 @@ CREATE TABLE IF NOT EXISTS posts_content (
     text TEXT NOT NULL,
     post_id BIGINT REFERENCES posts NOT NULL,
     is_current_version BOOLEAN NOT NULL,
-    previous_version BIGINT REFERENCES posts_content,
-    next_version BIGINT REFERENCES posts_content,
     created_by BIGINT REFERENCES users,
     created_at TIMESTAMP,
     last_modified_by BIGINT REFERENCES users,

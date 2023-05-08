@@ -1,8 +1,11 @@
-package fr.stoodev.stoodo.post;
+package fr.stoodev.stoodo.post.Controller;
 
-import fr.stoodev.stoodo.post.DTO.PostCreationDTO;
-import fr.stoodev.stoodo.post.DTO.PostDTO;
-import fr.stoodev.stoodo.post.DTO.TopicCreationDTO;
+import fr.stoodev.stoodo.post.DTO.*;
+import fr.stoodev.stoodo.post.Entity.PostContent;
+import fr.stoodev.stoodo.post.Entity.Topic;
+import fr.stoodev.stoodo.post.Service.PostContentService;
+import fr.stoodev.stoodo.post.Service.PostService;
+import fr.stoodev.stoodo.post.Service.TopicService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -20,6 +23,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PostController {
     private final PostService postService;
+    private final PostContentService postContentService;
     private final TopicService topicService;
 
     @PostMapping("/create")
@@ -34,6 +38,17 @@ public class PostController {
     @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<Topic> create(@RequestBody TopicCreationDTO topic) {
         return new ResponseEntity<>(this.topicService.create(topic), HttpStatus.CREATED);
+    }
+
+    @PostMapping("/create_post_content")
+    @Operation(summary = "Create post content", description = "Create post content")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<PostContentDTO> create(@RequestBody PostContentCreationDTO postContentCreationDTO) {
+        Optional<PostContentDTO> postContentDTOOptional = this.postContentService.create(postContentCreationDTO);
+
+        return postContentDTOOptional.map(postContentDTO -> new ResponseEntity<>(postContentDTO, HttpStatus.CREATED))
+                .orElseGet(() -> new ResponseEntity<>(null, HttpStatus.BAD_REQUEST));
+
     }
 
     @GetMapping("/get_by_id/{id}")
@@ -54,6 +69,15 @@ public class PostController {
         return post.map(postDTO -> new ResponseEntity<>(postDTO, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
 
+    }
+
+    @GetMapping("/get_content_by_post_id/{id}")
+    @Operation(summary = "Get post content by post id", description = "Return post content by post id")
+    public ResponseEntity<PostContentDTO> getOnePostContentByPostId(@PathVariable("id") Long postId) {
+        Optional<PostContentDTO> postContent = this.postContentService.getOneByPostId(postId);
+
+        return postContent.map(postContentDTO -> new ResponseEntity<>(postContentDTO, HttpStatus.OK))
+                .orElse(new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
     }
 
     @GetMapping("/list_published")
@@ -80,5 +104,14 @@ public class PostController {
     @Operation(summary = "Get topics list", description = "Return topics list")
     public ResponseEntity<Page<Topic>> getTopicsList(@RequestParam int page, @RequestParam int size) {
         return new ResponseEntity<>(this.topicService.getList(page, size), HttpStatus.OK);
+    }
+
+    @GetMapping("/list_content_by_post_id/{id}")
+    @Operation(summary = "Get post content by post id", description = "Return post content by post id")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<Page<PostContentDTO>> getPostContentListByPostId(@PathVariable("id") Long postId,
+                                                                           @RequestParam int page,
+                                                                           @RequestParam int size) {
+        return new ResponseEntity<>(this.postContentService.getListByPostId(postId, page, size), HttpStatus.OK);
     }
 }

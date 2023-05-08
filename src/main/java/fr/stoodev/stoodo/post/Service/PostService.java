@@ -1,4 +1,4 @@
-package fr.stoodev.stoodo.post;
+package fr.stoodev.stoodo.post.Service;
 
 import fr.stoodev.stoodo.post.DTO.PostCreationDTO;
 import fr.stoodev.stoodo.post.DTO.PostDTO;

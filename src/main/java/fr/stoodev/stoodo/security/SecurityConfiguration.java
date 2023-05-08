@@ -38,7 +38,10 @@ public class SecurityConfiguration {
                 .requestMatchers("/post/create").hasAnyAuthority(UserRole.ADMIN.name(),
                         UserRole.CONTRIBUTOR.name(), UserRole.SUPPORT.name())
                 .requestMatchers("/post/create_topic").hasAuthority(UserRole.ADMIN.name())
+                .requestMatchers("/post/create_post_content").hasAnyAuthority(UserRole.ADMIN.name(),
+                        UserRole.CONTRIBUTOR.name(), UserRole.SUPPORT.name())
                 .requestMatchers("/post/topics_list").permitAll()
+                .requestMatchers("/post/get_content_by_post_id/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement()
