@@ -6,12 +6,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Component
-public class AuditAwareImpl implements AuditorAware<Long> {
+public class AuditAwareImpl implements AuditorAware<UUID> {
 
     @Override
-    public Optional<Long> getCurrentAuditor() {
+    public Optional<UUID> getCurrentAuditor() {
         var auth = SecurityContextHolder.getContext().getAuthentication();
 
         if (auth == null) {

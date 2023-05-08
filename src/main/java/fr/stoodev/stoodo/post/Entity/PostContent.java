@@ -4,6 +4,8 @@ import fr.stoodev.stoodo.auditable.Auditable;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.UUID;
+
 @EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
@@ -13,11 +15,16 @@ import lombok.*;
 @Table(name = "posts_content")
 public class PostContent extends Auditable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue
+    private UUID id;
+
+    private Long version;
+
     private String text;
+
     @ManyToOne
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
+
     private boolean isCurrentVersion;
 }

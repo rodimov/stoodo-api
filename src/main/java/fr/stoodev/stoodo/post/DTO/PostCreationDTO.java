@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
@@ -16,6 +17,6 @@ public class PostCreationDTO {
     private String slug;
     private String imageURL;
     private String description;
+    private UUID topicId;
     private List<String> tagsList;
-    private List<Long> topicsList;
 }

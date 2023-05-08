@@ -4,6 +4,7 @@ import fr.stoodev.stoodo.post.DTO.PostCreationDTO;
 import fr.stoodev.stoodo.post.DTO.PostDTO;
 import fr.stoodev.stoodo.post.DTO.TagCreationDTO;
 import fr.stoodev.stoodo.post.Entity.Post;
+import fr.stoodev.stoodo.post.Entity.Topic;
 import fr.stoodev.stoodo.post.Repository.PostRepository;
 import fr.stoodev.stoodo.user.User;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -41,21 +43,20 @@ public class PostServiceImpl implements PostService {
 
         post.setTags(tags);
 
-        var topics = postCreationDTO.getTopicsList()
-                .stream()
-                .map(topicService::getOneById)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .toList();
+        if (postCreationDTO.getTopicId() != null) {
+            Optional<Topic> topic = topicService.getOneById(postCreationDTO.getTopicId());
 
-        post.setTopics(topics);
+            if (topic.isPresent()) {
+                post.setTopic(topic.get());
+            }
+        }
 
         post = this.postRepository.save(post);
         return this.modelMapper.map(post, PostDTO.class);
     }
 
     @Override
-    public Optional<PostDTO> getOneById(long postId) {
+    public Optional<PostDTO> getOneById(UUID postId) {
         Optional<Post> post = this.postRepository.findById(postId);
         return post.map(value -> this.modelMapper.map(value, PostDTO.class));
     }
@@ -68,21 +69,21 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Page<PostDTO> getListPublished(int page, int size) {
-        PageRequest pr = PageRequest.of(page, size, Sort.by("id"));
+        PageRequest pr = PageRequest.of(page, size);
         Page<Post> postsPage = this.postRepository.findByIsPublished(true, pr);
         return postsPage.map(post -> this.modelMapper.map(post, PostDTO.class));
     }
 
     @Override
     public Page<PostDTO> getListNotPublished(int page, int size) {
-        PageRequest pr = PageRequest.of(page, size, Sort.by("id"));
+        PageRequest pr = PageRequest.of(page, size);
         Page<Post> postsPage = this.postRepository.findByIsPublished(false, pr);
         return postsPage.map(post -> this.modelMapper.map(post, PostDTO.class));
     }
 
     @Override
     public Page<PostDTO> getListAll(int page, int size) {
-        PageRequest pr = PageRequest.of(page, size, Sort.by("id"));
+        PageRequest pr = PageRequest.of(page, size);
         Page<Post> postsPage = this.postRepository.findAll(pr);
         return postsPage.map(post -> this.modelMapper.map(post, PostDTO.class));
     }

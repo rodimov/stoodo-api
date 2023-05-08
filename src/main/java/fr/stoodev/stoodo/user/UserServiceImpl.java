@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -40,14 +41,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<UserInfoDTO> getOne(long userId) {
+    public Optional<UserInfoDTO> getOne(UUID userId) {
         Optional<User> user = this.userRepository.findById(userId);
         return user.map(value -> this.modelMapper.map(value, UserInfoDTO.class));
     }
 
     @Override
     public Page<UserInfoDTO> getList(int page, int size) {
-        PageRequest pr = PageRequest.of(page, size, Sort.by("id"));
+        PageRequest pr = PageRequest.of(page, size);
         Page<User> usersPage = this.userRepository.findAll(pr);
 
         return usersPage.map(user -> this.modelMapper.map(user, UserInfoDTO.class));

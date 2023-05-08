@@ -11,6 +11,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
+import java.util.UUID;
 
 @Data
 @MappedSuperclass
@@ -19,14 +20,14 @@ public abstract class Auditable {
 
     @CreatedBy
     @Column(updatable = false)
-    protected Long createdBy;
+    protected UUID createdBy;
 
     @CreatedDate
     @Column(updatable = false)
     protected Instant createdAt;
 
     @LastModifiedBy
-    protected Long lastModifiedBy;
+    protected UUID lastModifiedBy;
 
     @LastModifiedDate
     protected Instant lastModifiedAt;

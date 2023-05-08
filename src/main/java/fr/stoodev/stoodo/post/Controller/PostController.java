@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/post")
@@ -53,7 +54,7 @@ public class PostController {
 
     @GetMapping("/get_by_id/{id}")
     @Operation(summary = "Get post", description = "Return post by id")
-    public ResponseEntity<PostDTO> getOneById(@PathVariable("id") long postId) {
+    public ResponseEntity<PostDTO> getOneById(@PathVariable("id") UUID postId) {
         Optional<PostDTO> post = this.postService.getOneById(postId);
 
         return post.map(postDTO -> new ResponseEntity<>(postDTO, HttpStatus.OK))
@@ -73,7 +74,7 @@ public class PostController {
 
     @GetMapping("/get_content_by_post_id/{id}")
     @Operation(summary = "Get post content by post id", description = "Return post content by post id")
-    public ResponseEntity<PostContentDTO> getOnePostContentByPostId(@PathVariable("id") Long postId) {
+    public ResponseEntity<PostContentDTO> getOnePostContentByPostId(@PathVariable("id") UUID postId) {
         Optional<PostContentDTO> postContent = this.postContentService.getOneByPostId(postId);
 
         return postContent.map(postContentDTO -> new ResponseEntity<>(postContentDTO, HttpStatus.OK))
@@ -109,7 +110,7 @@ public class PostController {
     @GetMapping("/list_content_by_post_id/{id}")
     @Operation(summary = "Get post content by post id", description = "Return post content by post id")
     @SecurityRequirement(name = "Bearer Authentication")
-    public ResponseEntity<Page<PostContentDTO>> getPostContentListByPostId(@PathVariable("id") Long postId,
+    public ResponseEntity<Page<PostContentDTO>> getPostContentListByPostId(@PathVariable("id") UUID postId,
                                                                            @RequestParam int page,
                                                                            @RequestParam int size) {
         return new ResponseEntity<>(this.postContentService.getListByPostId(postId, page, size), HttpStatus.OK);

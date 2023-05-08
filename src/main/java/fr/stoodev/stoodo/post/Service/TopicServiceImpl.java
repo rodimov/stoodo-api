@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +35,7 @@ public class TopicServiceImpl implements TopicService {
     }
 
     @Override
-    public Optional<Topic> getOneById(Long topicId) {
+    public Optional<Topic> getOneById(UUID topicId) {
         return this.topicRepository.findById(topicId);
     }
 

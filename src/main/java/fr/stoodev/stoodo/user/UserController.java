@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/user")
@@ -31,7 +32,7 @@ public class UserController {
 
     @GetMapping("/get/{id}")
     @Operation(summary = "Get user", description = "Return user by id")
-    public ResponseEntity<UserInfoDTO> getOne(@PathVariable("id") int userId) {
+    public ResponseEntity<UserInfoDTO> getOne(@PathVariable("id") UUID userId) {
         Optional<UserInfoDTO> user = this.userService.getOne(userId);
 
         return user.map(userInfoDTO -> new ResponseEntity<>(userInfoDTO, HttpStatus.OK))

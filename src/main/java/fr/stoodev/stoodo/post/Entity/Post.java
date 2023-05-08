@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -16,19 +17,28 @@ import java.util.List;
 @Table(name = "posts")
 public class Post extends Auditable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue
+    private UUID id;
+
     private String title;
+
     private String slug;
+
     @Column(name = "image_url")
     private String imageURL;
+
     private String description;
+
+    @ManyToOne
+    @JoinColumn(name = "topic_id")
+    private Topic topic;
+
     private Boolean isPublished;
+
     @ManyToOne
     @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
+
     @ManyToMany(fetch = FetchType.LAZY)
     private List<Tag> tags;
-    @ManyToMany(fetch = FetchType.LAZY)
-    private List<Topic> topics;
 }

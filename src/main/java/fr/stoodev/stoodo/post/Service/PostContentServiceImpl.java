@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -41,25 +42,30 @@ public class PostContentServiceImpl implements PostContentService {
 
         postContent.setPost(post.get());
 
+        var lastContent = this.postContentRepository.findTopByPostOrderByVersionDesc(post.get());
+
+        if (lastContent.isPresent()) {
+            postContent.setVersion(lastContent.get().getVersion() + 1);
+        } else {
+            postContent.setVersion(1L);
+        }
+
         postContent = this.postContentRepository.save(postContent);
 
         return Optional.of(this.modelMapper.map(postContent, PostContentDTO.class));
     }
 
     @Override
-    public Optional<PostContentDTO> getOneByPostId(Long postId) {
+    public Optional<PostContentDTO> getOneByPostId(UUID postId) {
         Optional<Post> post = postRepository.findById(postId);
 
         if (post.isEmpty()) {
             return Optional.empty();
         }
 
-        var postContent = postContentRepository.findTopByPostAndIsCurrentVersionOrderByIdDesc(post.get(),
-                true);
-
-        if (postContent.isEmpty()) {
-            postContent = postContentRepository.findTopByPostOrderByIdDesc(post.get());
-        }
+        var postContent = postContentRepository.findTopByPostAndIsCurrentVersionOrderByVersionDesc(post.get(),
+                true)
+                .or(() -> postContentRepository.findTopByPostOrderByVersionDesc(post.get()));
 
         if (postContent.isEmpty()) {
             return Optional.empty();
@@ -69,7 +75,7 @@ public class PostContentServiceImpl implements PostContentService {
     }
 
     @Override
-    public Page<PostContentDTO> getListByPostId(Long postId, int page, int size) {
+    public Page<PostContentDTO> getListByPostId(UUID postId, int page, int size) {
         Optional<Post> post = postRepository.findById(postId);
 
         if (post.isEmpty()) {
@@ -83,7 +89,7 @@ public class PostContentServiceImpl implements PostContentService {
             return Page.empty();
         }
 
-        PageRequest pr = PageRequest.of(page, size, Sort.by("id"));
+        PageRequest pr = PageRequest.of(page, size);
         Page<PostContent> postContents = this.postContentRepository.findByPost(post.get(), pr);
 
         return postContents.map(postContent -> this.modelMapper.map(postContent, PostContentDTO.class));
