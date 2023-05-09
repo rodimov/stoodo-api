@@ -77,3 +77,12 @@ CREATE TABLE IF NOT EXISTS posts_user_history (
     is_liked BOOLEAN NOT NULL,
     UNIQUE (post_id, user_id)
 );
+
+CREATE TABLE IF NOT EXISTS images (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid (),
+    url TEXT,
+    created_by UUID REFERENCES users,
+    created_at TIMESTAMP,
+    last_modified_by UUID REFERENCES users,
+    last_modified_at TIMESTAMP
+);

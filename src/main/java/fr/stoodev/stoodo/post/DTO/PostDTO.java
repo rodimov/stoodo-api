@@ -1,21 +1,20 @@
 package fr.stoodev.stoodo.post.DTO;
 
+import fr.stoodev.stoodo.auditable.AuditableDTO;
 import fr.stoodev.stoodo.post.Entity.Tag;
 import fr.stoodev.stoodo.post.Entity.Topic;
 import fr.stoodev.stoodo.user.UserInfoDTO;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 import java.util.UUID;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PostDTO {
+public class PostDTO extends AuditableDTO {
     private UUID id;
     private String title;
     private String slug;
