@@ -1,9 +1,8 @@
 package fr.stoodev.stoodo.storage;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import java.net.URL;
+import java.nio.file.Path;
 
 public interface S3BucketStorageService {
-    URL uploadFile(String keyName, MultipartFile file);
+    URL uploadFile(String keyName, Path fileLocation);
 }
