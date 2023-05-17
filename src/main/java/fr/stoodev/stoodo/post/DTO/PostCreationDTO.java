@@ -15,8 +15,8 @@ import java.util.UUID;
 public class PostCreationDTO {
     private String title;
     private String slug;
-    private String imageURL;
+    private UUID image;
     private String description;
-    private UUID topicId;
+    private UUID topic;
     private List<String> tagsList;
 }

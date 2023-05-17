@@ -1,5 +1,9 @@
 package fr.stoodev.stoodo.post.Service;
 
+import fr.stoodev.stoodo.image.Image;
+import fr.stoodev.stoodo.image.ImageDTO;
+import fr.stoodev.stoodo.image.ImageRepository;
+import fr.stoodev.stoodo.image.ImageService;
 import fr.stoodev.stoodo.post.DTO.PostCreationDTO;
 import fr.stoodev.stoodo.post.DTO.PostDTO;
 import fr.stoodev.stoodo.post.DTO.TagCreationDTO;
@@ -25,6 +29,7 @@ public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final TagService tagService;
     private final TopicService topicService;
+    private final ImageRepository imageRepository;
     private final ModelMapper modelMapper;
 
     @Override
@@ -43,11 +48,19 @@ public class PostServiceImpl implements PostService {
 
         post.setTags(tags);
 
-        if (postCreationDTO.getTopicId() != null) {
-            Optional<Topic> topic = topicService.getOneById(postCreationDTO.getTopicId());
+        if (postCreationDTO.getTopic() != null) {
+            Optional<Topic> topic = topicService.getOneById(postCreationDTO.getTopic());
 
             if (topic.isPresent()) {
                 post.setTopic(topic.get());
+            }
+        }
+
+        if (postCreationDTO.getImage() != null) {
+            Optional<Image> image = imageRepository.findById(postCreationDTO.getImage());
+
+            if (image.isPresent()) {
+                post.setImage(image.get());
             }
         }
 

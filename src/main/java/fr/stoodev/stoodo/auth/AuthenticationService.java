@@ -1,10 +1,12 @@
 package fr.stoodev.stoodo.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.stoodev.stoodo.post.DTO.PostDTO;
 import fr.stoodev.stoodo.security.jwt.JWTService;
 import fr.stoodev.stoodo.token.Token;
 import fr.stoodev.stoodo.token.TokenRepository;
 import fr.stoodev.stoodo.token.TokenType;
+import fr.stoodev.stoodo.user.UserInfoDTO;
 import fr.stoodev.stoodo.user.UserRole;
 import fr.stoodev.stoodo.user.User;
 import fr.stoodev.stoodo.user.UserRepository;
@@ -16,6 +18,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -129,6 +132,22 @@ public class AuthenticationService {
         new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
         response.setStatus(200);
 
+    }
+
+    public Optional<UserInfoDTO> getAuthUserInfo() {
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if (auth == null) {
+            return Optional.empty();
+        }
+
+        var principal = auth.getPrincipal();
+
+        if (principal instanceof User user) {
+            return Optional.of(this.modelMapper.map(user, UserInfoDTO.class));
+        }
+
+        return Optional.empty();
     }
 
     public void logout(

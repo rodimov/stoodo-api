@@ -1,6 +1,7 @@
 package fr.stoodev.stoodo.post.DTO;
 
 import fr.stoodev.stoodo.auditable.AuditableDTO;
+import fr.stoodev.stoodo.image.ImageDTO;
 import fr.stoodev.stoodo.post.Entity.Tag;
 import fr.stoodev.stoodo.post.Entity.Topic;
 import fr.stoodev.stoodo.user.UserInfoDTO;
@@ -18,7 +19,7 @@ public class PostDTO extends AuditableDTO {
     private UUID id;
     private String title;
     private String slug;
-    private String imageURL;
+    private ImageDTO image;
     private String description;
     private Topic topic;
     private Boolean isPublished;

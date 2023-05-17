@@ -1,6 +1,7 @@
 package fr.stoodev.stoodo.post.Entity;
 
 import fr.stoodev.stoodo.auditable.Auditable;
+import fr.stoodev.stoodo.image.Image;
 import fr.stoodev.stoodo.user.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -24,8 +25,9 @@ public class Post extends Auditable {
 
     private String slug;
 
-    @Column(name = "image_url")
-    private String imageURL;
+    @ManyToOne
+    @JoinColumn(name = "image_id")
+    private Image image;
 
     private String description;
 

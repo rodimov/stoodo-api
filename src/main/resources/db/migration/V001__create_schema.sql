@@ -16,6 +16,15 @@ CREATE TABLE IF NOT EXISTS users (
     last_modified_at TIMESTAMP
 );
 
+CREATE TABLE IF NOT EXISTS images (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid (),
+    url TEXT,
+    created_by UUID REFERENCES users,
+    created_at TIMESTAMP,
+    last_modified_by UUID REFERENCES users,
+    last_modified_at TIMESTAMP
+);
+
 CREATE TABLE IF NOT EXISTS refresh_tokens (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid (),
     token VARCHAR(256) NOT NULL,
@@ -40,7 +49,7 @@ CREATE TABLE IF NOT EXISTS posts (
     title VARCHAR(256) UNIQUE NOT NULL,
     slug VARCHAR(256) UNIQUE NOT NULL,
     topic_id UUID REFERENCES topics,
-    image_url VARCHAR(1024),
+    image_id UUID REFERENCES images,
     description VARCHAR(1024),
     owner_id UUID REFERENCES users,
     is_published BOOLEAN NOT NULL,
@@ -76,13 +85,4 @@ CREATE TABLE IF NOT EXISTS posts_user_history (
     is_viewed BOOLEAN NOT NULL,
     is_liked BOOLEAN NOT NULL,
     UNIQUE (post_id, user_id)
-);
-
-CREATE TABLE IF NOT EXISTS images (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid (),
-    url TEXT,
-    created_by UUID REFERENCES users,
-    created_at TIMESTAMP,
-    last_modified_by UUID REFERENCES users,
-    last_modified_at TIMESTAMP
 );

@@ -1,15 +1,17 @@
 package fr.stoodev.stoodo.auth;
 
+import fr.stoodev.stoodo.user.UserInfoDTO;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/auth")
@@ -41,6 +43,15 @@ public class AuthenticationController {
             HttpServletResponse response
     ) throws IOException {
         authenticationService.refreshToken(request, response);
+    }
+
+    @GetMapping("/user_info")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<UserInfoDTO> getAuthUserInfo() {
+        Optional<UserInfoDTO> userInfoDTOOptional = authenticationService.getAuthUserInfo();
+
+        return userInfoDTOOptional.map(userInfo -> new ResponseEntity<>(userInfo, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(null, HttpStatus.BAD_REQUEST));
     }
 
     @PostMapping("/logout")
