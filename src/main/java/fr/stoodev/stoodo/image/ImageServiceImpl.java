@@ -8,7 +8,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.stream.ImageOutputStream;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -17,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Iterator;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -28,7 +33,11 @@ public class ImageServiceImpl implements ImageService {
 
     private final Path fileStorageLocation;
 
-    private static final int MAX_RESOLUTION = 1280;
+    @Value("${stoodo.files.max-image-resolution}")
+    private int maxResolution;
+
+    @Value("${stoodo.files.image-quality}")
+    private float quality;
 
     @Autowired
     public ImageServiceImpl(@Value("${stoodo.files.uploads-dir}") String uploadsDir,
@@ -112,8 +121,20 @@ public class ImageServiceImpl implements ImageService {
                 extension.equals("png")
                         || extension.equals("jpg")
                         || extension.equals("jpeg")
+                        || extension.equals("JPEG")
+                        || extension.equals("JPG")
+                        || extension.equals("wbmp")
+                        || extension.equals("WBMP")
+                        || extension.equals("PNG")
+                        || extension.equals("gif")
+                        || extension.equals("GIF")
+                        || extension.equals("tif")
+                        || extension.equals("TIF")
+                        || extension.equals("tiff")
+                        || extension.equals("TIFF")
                         || extension.equals("webp")
-                        || extension.equals("heic"));
+                        || extension.equals("WEBP")
+        );
     }
 
     private boolean isImageNeedToBeConverted(String extension) {
@@ -138,6 +159,10 @@ public class ImageServiceImpl implements ImageService {
             InputStream fileInputStream = Files.newInputStream(targetLocation);
             BufferedImage image = ImageIO.read(fileInputStream);
             fileInputStream.close();
+
+            if (image == null) {
+                return Optional.empty();
+            }
 
             BufferedImage convertedImage = new BufferedImage(image.getWidth(),
                     image.getHeight(), BufferedImage.TYPE_INT_RGB);
@@ -172,6 +197,10 @@ public class ImageServiceImpl implements ImageService {
             BufferedImage inputImage = ImageIO.read(fileInputStream);
             fileInputStream.close();
 
+            if (inputImage == null) {
+                return Optional.empty();
+            }
+
             BufferedImage outputImage = new BufferedImage(scaledWidth,
                     scaledHeight, inputImage.getType());
 
@@ -179,13 +208,28 @@ public class ImageServiceImpl implements ImageService {
             g2d.drawImage(inputImage, 0, 0, scaledWidth, scaledHeight, null);
             g2d.dispose();
 
-            OutputStream fileOutputStream = Files.newOutputStream(targetLocation);
-            boolean canWrite = ImageIO.write(outputImage, "jpg", fileOutputStream);
-            fileOutputStream.close();
+            Iterator<ImageWriter> writers = ImageIO.getImageWritersByFormatName("jpg");
 
-            if (!canWrite) {
+            if (!writers.hasNext()) {
                 return Optional.empty();
             }
+
+            ImageWriter writer = writers.next();
+
+            OutputStream outputStream = Files.newOutputStream(targetLocation);
+            ImageOutputStream imageOutputStream = ImageIO.createImageOutputStream(outputStream);
+            writer.setOutput(imageOutputStream);
+
+            ImageWriteParam param = writer.getDefaultWriteParam();
+
+            param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+            param.setCompressionQuality(quality);
+
+            writer.write(null, new IIOImage(outputImage, null, null), param);
+
+            outputStream.close();
+            imageOutputStream.close();
+            writer.dispose();
 
             return Optional.of(filename);
         } catch (IOException e) {
@@ -201,18 +245,22 @@ public class ImageServiceImpl implements ImageService {
             BufferedImage inputImage = ImageIO.read(fileInputStream);
             fileInputStream.close();
 
+            if (inputImage == null) {
+                return Optional.empty();
+            }
+
             int width = inputImage.getWidth();
             int height = inputImage.getHeight();
 
             double percent = 1;
 
             if (width > height) {
-                if (width > MAX_RESOLUTION) {
-                    percent = (double) MAX_RESOLUTION / width;
+                if (width > maxResolution) {
+                    percent = (double) maxResolution / width;
                 }
             } else {
-                if (height > MAX_RESOLUTION) {
-                    percent = (double) MAX_RESOLUTION / height;
+                if (height > maxResolution) {
+                    percent = (double) maxResolution / height;
                 }
             }
 
