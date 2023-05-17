@@ -40,7 +40,7 @@ public class AuthenticationService {
     private static final String REFRESH_TOKEN_COOKIE = "refresh_token";
 
     @Value("${stoodo.security.secured-cookies}")
-    private static boolean isSecuredCookies;
+    private boolean isSecuredCookies;
 
 
     public void register(RegisterRequest request,
