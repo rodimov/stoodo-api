@@ -3,6 +3,7 @@ package fr.stoodev.stoodo.user;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -26,7 +27,7 @@ public class UserController {
     @PostMapping("/create")
     @Operation(summary = "Create user", description = "Create user")
     @SecurityRequirement(name = "Bearer Authentication")
-    public ResponseEntity<UserInfoDTO> create(@RequestBody UserCreationDTO user) {
+    public ResponseEntity<UserInfoDTO> create(@Valid @RequestBody UserCreationDTO user) {
         return new ResponseEntity<>(this.userService.create(user), HttpStatus.CREATED);
     }
 

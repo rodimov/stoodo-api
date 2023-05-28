@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -43,9 +44,7 @@ public class AuthenticationService {
     private boolean isSecuredCookies;
 
 
-    public void register(RegisterRequest request,
-                         HttpServletResponse response
-    ) throws IOException {
+    public UserInfoDTO register(RegisterRequest request) {
         User user = this.modelMapper.map(request, User.class);
 
         user.setPassword(passwordEncoder.encode(request.getPassword()));
@@ -53,18 +52,7 @@ public class AuthenticationService {
 
         user = this.userRepository.save(user);
 
-        var accessToken = jwtService.generateAccessToken(user);
-        var refreshToken = jwtService.generateRefreshToken(user);
-
-        saveUserToken(user, refreshToken);
-        saveRefreshTokenInCookies(response, refreshToken);
-
-        var authResponse = AuthenticationResponse.builder()
-                .accessToken(accessToken)
-                .build();
-
-        new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
-        response.setStatus(200);
+        return this.modelMapper.map(user, UserInfoDTO.class);
     }
 
     public void authenticate(AuthenticationRequest request,

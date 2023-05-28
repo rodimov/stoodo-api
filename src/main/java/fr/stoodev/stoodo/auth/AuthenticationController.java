@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,11 +23,8 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/register")
-    public void register(
-            @RequestBody RegisterRequest request,
-            HttpServletResponse response
-    ) throws IOException {
-        authenticationService.register(request, response);
+    public ResponseEntity<UserInfoDTO> register(@Valid @RequestBody RegisterRequest request) {
+        return new ResponseEntity<>(authenticationService.register(request), HttpStatus.CREATED);
     }
 
     @PostMapping("/authenticate")
