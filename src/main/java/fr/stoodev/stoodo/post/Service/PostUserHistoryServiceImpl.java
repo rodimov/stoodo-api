@@ -2,6 +2,7 @@ package fr.stoodev.stoodo.post.Service;
 
 import fr.stoodev.stoodo.post.DTO.PostDTO;
 import fr.stoodev.stoodo.post.DTO.PostUserHistoryDTO;
+import fr.stoodev.stoodo.post.DTO.PostUserInteractionDTO;
 import fr.stoodev.stoodo.post.Entity.Post;
 import fr.stoodev.stoodo.post.Entity.PostUserHistory;
 import fr.stoodev.stoodo.post.Repository.PostUserHistoryRepository;
@@ -59,14 +60,14 @@ public class PostUserHistoryServiceImpl implements PostUserHistoryService {
 
     @Override
     @Transactional
-    public Optional<PostUserHistoryDTO> getPostUserHistory(UUID postId, UUID userId) {
-        return this.getOrCreatePostUserHistory(postId, userId)
-                .map(value -> this.modelMapper.map(value, PostUserHistoryDTO.class));
+    public Optional<PostUserInteractionDTO> getPostUserInteraction(UUID postId) {
+        return this.getOrCreatePostUserHistory(postId, getAuthenticatedUser())
+                .map(value -> this.modelMapper.map(value, PostUserInteractionDTO.class));
     }
 
     @Override
     @Transactional
-    public Optional<PostUserHistoryDTO> setLiked(UUID postId, boolean isLiked) {
+    public Optional<PostUserInteractionDTO> setLiked(UUID postId, boolean isLiked) {
         Optional<PostUserHistory> postUserHistory = this.getOrCreatePostUserHistory(postId, getAuthenticatedUser());
 
         if (postUserHistory.isEmpty()) {
@@ -79,12 +80,12 @@ public class PostUserHistoryServiceImpl implements PostUserHistoryService {
         });
 
         PostUserHistory history = postUserHistoryRepository.save(postUserHistory.get());
-        return Optional.of(this.modelMapper.map(history, PostUserHistoryDTO.class));
+        return Optional.of(this.modelMapper.map(history, PostUserInteractionDTO.class));
     }
 
     @Override
     @Transactional
-    public Optional<PostUserHistoryDTO> setOpened(UUID postId) {
+    public Optional<PostUserInteractionDTO> setOpened(UUID postId) {
         Optional<PostUserHistory> postUserHistory = this.getOrCreatePostUserHistory(postId, getAuthenticatedUser());
 
         if (postUserHistory.isEmpty()) {
@@ -97,12 +98,12 @@ public class PostUserHistoryServiceImpl implements PostUserHistoryService {
         });
 
         PostUserHistory history = postUserHistoryRepository.save(postUserHistory.get());
-        return Optional.of(this.modelMapper.map(history, PostUserHistoryDTO.class));
+        return Optional.of(this.modelMapper.map(history, PostUserInteractionDTO.class));
     }
 
     @Override
     @Transactional
-    public Optional<PostUserHistoryDTO> setViewed(UUID postId) {
+    public Optional<PostUserInteractionDTO> setViewed(UUID postId) {
         Optional<PostUserHistory> postUserHistory = this.getOrCreatePostUserHistory(postId, getAuthenticatedUser());
 
         if (postUserHistory.isEmpty()) {
@@ -115,7 +116,7 @@ public class PostUserHistoryServiceImpl implements PostUserHistoryService {
         });
 
         PostUserHistory history = postUserHistoryRepository.save(postUserHistory.get());
-        return Optional.of(this.modelMapper.map(history, PostUserHistoryDTO.class));
+        return Optional.of(this.modelMapper.map(history, PostUserInteractionDTO.class));
     }
 
     @Override

@@ -37,6 +37,7 @@ public class SecurityConfiguration {
                 .requestMatchers("/post/list_all").hasAnyAuthority(UserRole.ADMIN.name())
                 .requestMatchers("/post/create").hasAnyAuthority(UserRole.ADMIN.name(),
                         UserRole.CONTRIBUTOR.name(), UserRole.SUPPORT.name())
+                .requestMatchers("/post/publish/**").hasAnyAuthority(UserRole.ADMIN.name(), UserRole.SUPPORT.name())
                 .requestMatchers("/post/create_topic").hasAuthority(UserRole.ADMIN.name())
                 .requestMatchers("/post/create_post_content").hasAnyAuthority(UserRole.ADMIN.name(),
                         UserRole.CONTRIBUTOR.name(), UserRole.SUPPORT.name())

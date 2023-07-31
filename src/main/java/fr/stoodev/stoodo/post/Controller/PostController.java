@@ -35,6 +35,16 @@ public class PostController {
         return new ResponseEntity<>(this.postService.create(post), HttpStatus.CREATED);
     }
 
+    @PostMapping("/publish/{id}")
+    @Operation(summary = "Publish post", description = "Publish post by post id")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<PostDTO> setIsPublished(@PathVariable("id") UUID postId, @RequestParam boolean isPublished) {
+        Optional<PostDTO> postDTO = postService.setPublished(postId, isPublished);
+
+        return postDTO.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
+                .orElse(new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
+    }
+
     @PostMapping("/create_topic")
     @Operation(summary = "Create topic", description = "Create topic")
     @SecurityRequirement(name = "Bearer Authentication")
@@ -141,9 +151,9 @@ public class PostController {
     @PostMapping("/like_post/{id}")
     @Operation(summary = "Like post", description = "Like post by post id")
     @SecurityRequirement(name = "Bearer Authentication")
-    public ResponseEntity<PostUserHistoryDTO> setLikedPost(@PathVariable("id") UUID postId,
-                                                           @RequestParam boolean isLiked) {
-        Optional<PostUserHistoryDTO> postUserHistoryDTO = postUserHistoryService.setLiked(postId, isLiked);
+    public ResponseEntity<PostUserInteractionDTO> setLikedPost(@PathVariable("id") UUID postId,
+                                                               @RequestParam boolean isLiked) {
+        Optional<PostUserInteractionDTO> postUserHistoryDTO = postUserHistoryService.setLiked(postId, isLiked);
 
         return postUserHistoryDTO.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
@@ -152,8 +162,8 @@ public class PostController {
     @PostMapping("/open_post/{id}")
     @Operation(summary = "Open post", description = "Open post by post id")
     @SecurityRequirement(name = "Bearer Authentication")
-    public ResponseEntity<PostUserHistoryDTO> setOpenedPost(@PathVariable("id") UUID postId) {
-        Optional<PostUserHistoryDTO> postUserHistoryDTO = postUserHistoryService.setOpened(postId);
+    public ResponseEntity<PostUserInteractionDTO> setOpenedPost(@PathVariable("id") UUID postId) {
+        Optional<PostUserInteractionDTO> postUserHistoryDTO = postUserHistoryService.setOpened(postId);
 
         return postUserHistoryDTO.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
@@ -162,10 +172,20 @@ public class PostController {
     @PostMapping("/view_post/{id}")
     @Operation(summary = "View post", description = "View post by post id")
     @SecurityRequirement(name = "Bearer Authentication")
-    public ResponseEntity<PostUserHistoryDTO> setViewPost(@PathVariable("id") UUID postId) {
-        Optional<PostUserHistoryDTO> postUserHistoryDTO = postUserHistoryService.setViewed(postId);
+    public ResponseEntity<PostUserInteractionDTO> setViewPost(@PathVariable("id") UUID postId) {
+        Optional<PostUserInteractionDTO> postUserHistoryDTO = postUserHistoryService.setViewed(postId);
 
         return postUserHistoryDTO.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
+                .orElse(new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
+    }
+
+    @GetMapping("/user_interaction_by_post/{id}")
+    @Operation(summary = "Get user history by post", description = "Return user interaction by post id")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<PostUserInteractionDTO> getPostUserInteraction(@PathVariable("id") UUID postId) {
+        Optional<PostUserInteractionDTO> postUserInteractionDTO = postUserHistoryService.getPostUserInteraction(postId);
+
+        return postUserInteractionDTO.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
     }
 

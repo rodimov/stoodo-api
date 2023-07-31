@@ -69,6 +69,21 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public Optional<PostDTO> setPublished(UUID postId, boolean isPublished) {
+        Optional<Post> postOptional = this.postRepository.findById(postId);
+
+        if (postOptional.isEmpty()) {
+            return Optional.empty();
+        }
+
+        Post post = postOptional.get();
+        post.setIsPublished(isPublished);
+        post = this.postRepository.save(post);
+
+        return Optional.of(this.modelMapper.map(post, PostDTO.class));
+    }
+
+    @Override
     public Optional<PostDTO> getOneById(UUID postId) {
         Optional<Post> post = this.postRepository.findById(postId);
         return post.map(value -> this.modelMapper.map(value, PostDTO.class));

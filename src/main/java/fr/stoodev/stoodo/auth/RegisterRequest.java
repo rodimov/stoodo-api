@@ -21,7 +21,7 @@ public class RegisterRequest {
     @NotNull(message = "Please enter last name")
     private String lastName;
 
-    @Pattern(message = "Please enter valid username", regexp = "^(?=[a-zA-Z0-9._]{8,20}$)(?!.*[_.]{2})[^_.].*[^_.]$")
+    @Pattern(message = "Please enter valid username", regexp = "^(?=[a-zA-Z0-9._]{3,20}$)(?!.*[_.]{2})[^_.].*[^_.]$")
     @NotBlank(message = "Please enter username")
     @NotNull(message = "Please enter username")
     private String username;
