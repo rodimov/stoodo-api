@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS images (
 
 CREATE TABLE IF NOT EXISTS refresh_tokens (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid (),
-    token VARCHAR(256) NOT NULL,
+    token VARCHAR(256) NOT NULL UNIQUE,
     token_type VARCHAR(256) NOT NULL,
     is_revoked BOOLEAN NOT NULL,
     is_expired BOOLEAN NOT NULL,
