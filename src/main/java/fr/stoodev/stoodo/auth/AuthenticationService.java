@@ -58,15 +58,15 @@ public class AuthenticationService {
     public void authenticate(AuthenticationRequest request,
                              HttpServletResponse response
     ) throws IOException {
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow();
+
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.getUsername(),
+                        user.getUsername(),
                         request.getPassword()
                 )
         );
-
-        User user = userRepository.findByUsername(request.getUsername())
-                .orElseThrow();
 
         var accessToken = jwtService.generateAccessToken(user);
 
