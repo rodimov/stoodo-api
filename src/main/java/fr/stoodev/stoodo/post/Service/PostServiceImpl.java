@@ -98,14 +98,14 @@ public class PostServiceImpl implements PostService {
     @Override
     public Page<PostDTO> getListPublished(int page, int size) {
         PageRequest pr = PageRequest.of(page, size);
-        Page<Post> postsPage = this.postRepository.findByIsPublished(true, pr);
+        Page<Post> postsPage = this.postRepository.findByIsPublishedOrderByCreatedAtDesc(true, pr);
         return postsPage.map(post -> this.modelMapper.map(post, PostDTO.class));
     }
 
     @Override
     public Page<PostDTO> getListNotPublished(int page, int size) {
         PageRequest pr = PageRequest.of(page, size);
-        Page<Post> postsPage = this.postRepository.findByIsPublished(false, pr);
+        Page<Post> postsPage = this.postRepository.findByIsPublishedOrderByCreatedAtDesc(false, pr);
         return postsPage.map(post -> this.modelMapper.map(post, PostDTO.class));
     }
 

@@ -10,5 +10,5 @@ import java.util.UUID;
 
 public interface PostRepository extends JpaRepository<Post, UUID> {
     Optional<Post> findBySlug(String slug);
-    Page<Post> findByIsPublished(boolean isPublished, Pageable pageable);
+    Page<Post> findByIsPublishedOrderByCreatedAtDesc(boolean isPublished, Pageable pageable);
 }
