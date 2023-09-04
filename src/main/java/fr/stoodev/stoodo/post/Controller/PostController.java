@@ -92,6 +92,15 @@ public class PostController {
                 .orElse(new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
     }
 
+    @GetMapping("/get_content_by_slug/{slug}")
+    @Operation(summary = "Get post content by slug", description = "Return post content by slug")
+    public ResponseEntity<PostContentDTO> getOnePostContentBySlug(@PathVariable("slug") String slug) {
+        Optional<PostContentDTO> postContent = this.postContentService.getOneByPostSlug(slug);
+
+        return postContent.map(postContentDTO -> new ResponseEntity<>(postContentDTO, HttpStatus.OK))
+                .orElse(new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
+    }
+
     @GetMapping("/list_published")
     @Operation(summary = "Get published posts list", description = "Return published posts list")
     public ResponseEntity<Page<PostDTO>> getListPublished(@RequestParam int page, @RequestParam int size) {

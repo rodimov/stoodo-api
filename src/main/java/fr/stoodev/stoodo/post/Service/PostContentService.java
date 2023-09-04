@@ -11,4 +11,5 @@ public interface PostContentService {
     Optional<PostContentDTO> create(PostContentCreationDTO postContentCreationDTO);
     Optional<PostContentDTO> getOneByPostId(UUID postId);
     Page<PostContentDTO> getListByPostId(UUID postId, int page, int size);
+    Optional<PostContentDTO> getOneByPostSlug(String slug);
 }

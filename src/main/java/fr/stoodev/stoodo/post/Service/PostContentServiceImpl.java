@@ -62,15 +62,7 @@ public class PostContentServiceImpl implements PostContentService {
             return Optional.empty();
         }
 
-        var postContent = postContentRepository.findTopByPostAndIsCurrentVersionOrderByVersionDesc(post.get(),
-                true)
-                .or(() -> postContentRepository.findTopByPostOrderByVersionDesc(post.get()));
-
-        if (postContent.isEmpty()) {
-            return Optional.empty();
-        }
-
-        return postContent.map(value -> this.modelMapper.map(value, PostContentDTO.class));
+        return getOneByPost(post.get());
     }
 
     @Override
@@ -92,5 +84,28 @@ public class PostContentServiceImpl implements PostContentService {
         Page<PostContent> postContents = this.postContentRepository.findByPost(post.get(), pr);
 
         return postContents.map(postContent -> this.modelMapper.map(postContent, PostContentDTO.class));
+    }
+
+    @Override
+    public Optional<PostContentDTO> getOneByPostSlug(String slug) {
+        Optional<Post> post = postRepository.findBySlug(slug);
+
+        if (post.isEmpty()) {
+            return Optional.empty();
+        }
+
+        return getOneByPost(post.get());
+    }
+
+    private Optional<PostContentDTO> getOneByPost(Post post) {
+        var postContent = postContentRepository.findTopByPostAndIsCurrentVersionOrderByVersionDesc(post,
+                        true)
+                .or(() -> postContentRepository.findTopByPostOrderByVersionDesc(post));
+
+        if (postContent.isEmpty()) {
+            return Optional.empty();
+        }
+
+        return postContent.map(value -> this.modelMapper.map(value, PostContentDTO.class));
     }
 }
