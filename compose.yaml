@@ -1,0 +1,23 @@
+services:
+  stoodo-api:
+    restart: always
+    build: .
+    depends_on:
+      stoodo-database:
+        condition: service_healthy
+    ports:
+      - '8080:8080'
+  stoodo-database:
+    image: 'postgres:15.2'
+    restart: always
+    environment:
+      - 'POSTGRES_DB=postgres'
+      - 'POSTGRES_PASSWORD=postgres'
+      - 'POSTGRES_USER=postgres'
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "sh -c 'pg_isready -U postgres -d postgres'" ]
+      interval: 10s
+      timeout: 3s
+      retries: 3
